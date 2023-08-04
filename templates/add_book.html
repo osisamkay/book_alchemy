@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add Book</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .success-message {
+            color: green;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        form {
+            display: grid;
+            grid-gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 13L3 6h10l-5 7zm0-11L2 7h12L8 2z'/%3E%3C/svg%3E") no-repeat right center;
+            background-size: 15px 15px;
+            padding-right: 30px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add Book</h2>
+
+        {% if success_message %}
+            <div class="success-message">{{ success_message }}</div>
+        {% endif %}
+
+        <form action="{{ url_for('add_book') }}" method="post">
+            <label for="isbn">ISBN:</label>
+            <input type="text" id="isbn" name="isbn" required>
+
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="publication_year">Publication Year:</label>
+            <input type="number" id="publication_year" name="publication_year" required>
+
+            <label for="author">Author:</label>
+            <select id="author" name="author" required>
+                {% for author in authors %}
+                    <option value="{{ author.id }}">{{ author.name }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Add Book</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Library - Home</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .sort-buttons {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .sort-buttons button {
+      padding: 8px 16px;
+      margin: 0 5px;
+      background-color: #fff;
+      border: 1px solid #007bff;
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    .sort-buttons button.active {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .book-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .book {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .book h3 {
+      margin: 0;
+      font-size: 20px;
+      color: #007bff;
+    }
+
+    .add-book-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="header">Welcome to the Library</h1>
+    <div class="sort-buttons">
+      <button onclick="sortBooks('title')" class="active">Sort by Title</button>
+      <button onclick="sortBooks('author')">Sort by Author</button>
+    </div>
+    <form action="{{ url_for('search_books') }}" method="GET" class="search-form">
+      <input type="text" name="keyword" placeholder="Enter keyword...">
+      <button type="submit">Search</button>
+    </form>
+    <p>Below is the list of books available:</p>
+    <ul class="book-list" id="bookList">
+        {% for book in books %}
+        <li class="book">
+            <h3><a href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }}</a></h3>
+            <p>Author: <a href="{{ url_for('author_detail', author_id=book.author.id) }}">{{ book.author.name }}</a></p>
+            <p>ISBN: {{ book.isbn }}</p>
+            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post">
+                <button type="submit">Delete Book</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('add_book') }}" class="add-book-link">Add Book</a>
+  </div>
+
+  <script>
+    function sortBooks(sortBy) {
+      let bookList = document.getElementById('bookList');
+      let books = bookList.getElementsByClassName('book');
+      console.log(books)
+
+      Array.from(books).sort((a, b) => {
+        let aText, bText;
+        if (sortBy === 'title') {
+          aText = a.querySelector('h3').innerText;
+          bText = b.querySelector('h3').innerText;
+        } else if (sortBy === 'author') {
+          aText = a.querySelector('p:nth-of-type(1)').innerText;
+          bText = b.querySelector('p:nth-of-type(1)').innerText;
+        }
+        return aText.localeCompare(bText);
+      }).forEach(book => bookList.appendChild(book));
+    }
+  </script>
+
+</body>
+</html>
+
